@@ -16,23 +16,21 @@ jobs:
 
       - uses: NuGet/setup-nuget@v2
 
-      - name: Restore packages
-        run: nuget restore DemoAspNetFramework.sln
+      - run: nuget restore DemoAspNetFramework.sln
 
-      - name: Build project
-        run: msbuild DemoAspNetFramework.sln /p:Configuration=Release
+      - run: msbuild DemoAspNetFramework.sln /p:Configuration=Release
 
-      - name: Publish website
+      - name: Package website
         run: |
           msbuild DemoAspNetFramework\DemoAspNetFramework.csproj `
           /p:Configuration=Release `
           /p:DeployOnBuild=true `
-          /p:WebPublishMethod=FileSystem `
-          /p:PublishUrl="${{ github.workspace }}\published\"
+          /p:WebPublishMethod=Package `
+          /p:PackageAsSingleFile=true
 
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v3
         with:
           app-name: demo-aspnet-framework
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: '${{ github.workspace }}\published'
+          package: DemoAspNetFramework/obj/Release/Package/DemoAspNetFramework.zip
