@@ -1,19 +1,10 @@
-using System.Web.Optimization;
-
 namespace DemoAspNetFramework
 {
     public class BundleConfig
     {
-        // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
-        public static void RegisterBundles(BundleCollection bundles)
+        public static void RegisterBundles()
         {
-            // Add script and style bundles here as needed.
-            // Example:
-            // bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-            //             "~/Scripts/jquery-{version}.js"));
-            //
-            // bundles.Add(new StyleBundle("~/Content/css").Include(
-            //             "~/Content/site.css"));
+            // Empty shell to allow compilation without System.Web.Optimization dependency
         }
     }
 }

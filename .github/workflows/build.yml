@@ -1,29 +1,26 @@
-name: Test ASP.NET Framework Build
+name: Build ASP.NET Framework Project
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
 
-      - name: Restore packages
-        run: nuget restore DemoAspNetFramework.sln
+    - name: Restore NuGet packages
+      run: nuget restore DemoAspNetFramework.sln
 
-      - name: Build solution
-        run: |
-          msbuild DemoAspNetFramework.sln `
-          /p:Configuration=Release `
-          /p:VisualStudioVersion=17.0 `
-          /p:DeployOnBuild=true
+    - name: Build Solution
+      run: msbuild DemoAspNetFramework.sln /p:Configuration=Release

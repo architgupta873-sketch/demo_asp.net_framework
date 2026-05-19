@@ -4,25 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - DemoAspNetFramework</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-    </style>
-    @RenderSection("head", required: false)
 </head>
 <body>
-    <div id="main-content">
+    <div class="container body-content">
         @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - DemoAspNetFramework</p>
+        </footer>
     </div>
-
-    @RenderSection("scripts", required: false)
 </body>
 </html>
