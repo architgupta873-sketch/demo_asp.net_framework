@@ -10,33 +10,35 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - uses: actions/checkout@v4
 
-    - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
 
-    - uses: microsoft/setup-msbuild@v2
+      - uses: NuGet/setup-nuget@v2
 
-    - uses: NuGet/setup-nuget@v2
+      - name: Restore NuGet packages
+        run: nuget restore DemoAspNetFramework.sln
 
-    - name: Restore packages
-      run: nuget restore DemoAspNetFramework.sln
+      - name: Build solution
+        run: msbuild DemoAspNetFramework.sln /p:Configuration=Release
 
-    - name: Build
-      run: msbuild DemoAspNetFramework.sln /p:Configuration=Release
+      - name: Publish website
+        run: |
+          msbuild DemoAspNetFramework\DemoAspNetFramework.csproj `
+          /p:DeployOnBuild=true `
+          /p:WebPublishMethod=FileSystem `
+          /p:Configuration=Release `
+          /p:publishUrl=published
 
-    - name: Publish website files
-      run: |
-        msbuild DemoAspNetFramework\DemoAspNetFramework.csproj `
-        /p:Configuration=Release `
-        /p:DeployOnBuild=true `
-        /p:WebPublishMethod=FileSystem `
-        /p:PublishUrl="${{ github.workspace }}\site"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aspnet-framework-site
+          path: published/**
 
-    - name: Verify publish output
-      run: dir "${{ github.workspace }}\site"
-
-    - name: Deploy to Azure
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: demo-aspnet-framework
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: '${{ github.workspace }}\site'
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: demo-aspnet-framework
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: published
